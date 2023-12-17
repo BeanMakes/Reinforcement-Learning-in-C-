@@ -1,8 +1,6 @@
 #include <iostream>
 #include <random>
-
-#include "gnuplot-iostream.h"
-
+#include <ctime>
 
 struct environment{
     float arms[10] = {0.1,0.5,0.6,0.8,0.10,0.25,0.6,0.45,0.75,0.65};
@@ -17,7 +15,10 @@ struct agent{
 } ;
 
 int step(float *arms, int action) {
+    // std::default_random_engine rand_number;
+    // std::uniform_real_distribution<float> distribution(0.0,1.0);
     float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    
     if(r<arms[action]){
         return 1;
     }else{
@@ -33,8 +34,11 @@ void update_q(int action,float *q, float *arms, int *actions){
 
 int episilonGreedy(float esp,float *q){
     float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(0,9); // distribution in range [0, 9]
     if (r < esp){
-        return rand()%(9-0 + 1) + 0;
+        return dist6(rng);
     }else{
         float max = 0;
         int action = 0;
@@ -50,17 +54,18 @@ int episilonGreedy(float esp,float *q){
 
 int main() {
 
-    float esp = 0.2;
+    float esp = 0.1;
     environment env;
     agent a;
     int action = episilonGreedy(esp,a.q);
+    std::cout<< action<<"\n";
     a.action[action]+=1;
     update_q(action,a.q,env.arms,a.action);
 
     for (int t = 0; t < 1000; t++){
         action = episilonGreedy(esp,a.q);
-        std::cout << action<< "\n";
         a.action[action]+=1;
+        std::cout << "Action Chosen: " << action << "\n";
         update_q(action,a.q,env.arms,a.action);
     }
     for (int i = 0; i<10;i++){
