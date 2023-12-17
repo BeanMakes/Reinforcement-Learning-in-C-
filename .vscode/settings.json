@@ -71,6 +71,11 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xloctime": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "array": "cpp",
+        "cfenv": "cpp",
+        "condition_variable": "cpp",
+        "numeric": "cpp",
+        "strstream": "cpp"
     }
 }
